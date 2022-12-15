@@ -38,6 +38,12 @@ graph_proto = onnx.helper.make_graph([if_node], model_name,
 
 model_def = onnx.helper.make_model(graph_proto, producer_name="if-example")
 
+for node in model_def.graph.node:
+    if node.op_type=="If":
+        for attribute in node.attribute:
+            if attribute.type==onnx.AttributeProto.GRAPH: # Attribute.g is a graph
+                print(len(attribute.g.initializer))
+
 # Check spec
 onnx.save(model_def, model_path)
 
